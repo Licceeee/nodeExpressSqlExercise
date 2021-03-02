@@ -1,19 +1,19 @@
-require('dotenv').config()
-
 const express = require('express')
-const { Pool } = require('pg')
 const app = express();
 
 const port = process.env.PORT || 9000
 
 app.use(express.json())
 
-const pool = new Pool()
+const users = require('./routes/user')
+const orders = require('./routes/order')
+
+app.use('/api/v1/users', users)
+app.use('/api/v1/orders', orders)
 
 app.get('/', async (req, res) => {
   try {
-     const {rows } = await pool.query("SELECT NOW()");
-     res.send(rows[0].now)
+     res.send("response")
    } catch(e) {
     res.sendStatus(500)
   }
@@ -21,6 +21,4 @@ app.get('/', async (req, res) => {
 
 
 
-app.listen(port, () => {
-   console.log(`listen at port ${port}`)
-})
+app.listen(port, () => console.log(`listen at port ${port}`))
