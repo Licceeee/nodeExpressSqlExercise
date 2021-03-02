@@ -6,6 +6,10 @@ const db = require('../db')
 
 
 const router = express.Router();
+const { validationResult } = require('express-validator');
+const { validateFirstName, validateLastName,
+        validateAge, validateID } = require('../validators') 
+
 
 // ========================================>> GET:ALL
 router.get('/', async (req, res) => {
@@ -33,7 +37,14 @@ router.get('/:id', async (req, res) => {
 })
 
 // ========================================>> POST
-router.post('/', async (req, res) => {
+router.post('/', 
+  [validateFirstName, validateLastName, validateAge],
+  async (req, res) => {
+
+    const errors = validationResult(req) 
+        if(!errors.isEmpty()){ 
+            return res.status(422).send({errors}) 
+        }
     const { first_name, last_name, age } = req.body
 
     const createUser = {
@@ -60,6 +71,10 @@ router.put('/:id', async (req, res) => {
     const { id } = req.params
     const { first_name, last_name, age } = req.body
 
+    const errors = validationResult(req) 
+        if(!errors.isEmpty()){ 
+            return res.status(422).send({errors}) 
+        }
     const updateUser = {
         text: `
             UPDATE users
@@ -83,6 +98,10 @@ router.put('/:id', async (req, res) => {
 router.put('/:id/delete', async (req, res) => {
     const { id } = req.params
 
+    const errors = validationResult(req) 
+        if(!errors.isEmpty()){ 
+            return res.status(422).send({errors}) 
+        }
     const deactivateUser = {
         text: `
             UPDATE users
