@@ -12,4 +12,8 @@ create .env
 
 ```cp .env.sample .env```
 
-add details from db
+open file & add details from db
+
+start with nodemon script
+
+```npm run dev```
